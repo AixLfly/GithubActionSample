@@ -15,26 +15,32 @@ jobs:
     env:
       TZ: Asia/Shanghai
     steps:
+      # 1. 拉取代码
       - uses: actions/checkout@v3
 
+      # 2. 设置 Python
       - name: Set up Python 3.12
         uses: actions/setup-python@v3
         with:
           python-version: "3.12"
 
+      # 3. 安装依赖
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests
 
+      # 4. 调试环境变量（可选，调试完可以注释掉）
+      # - name: Debug env
+      #   run: env
+
+      # 5. 运行天气推送脚本
       - name: Run weather report
         env:
-          # 关键：这里不重命名，直接使用Python代码期望的变量名
-          # 但你的Secrets中是带下划线的，所以需要对应
-          APPID: ${{ secrets.APP_ID }}           # Secrets中的APP_ID → Python中的APPID
-          APPSECRET: ${{ secrets.APP_SECRET }}   # APP_SECRET → APPSECRET
-          OPENID: ${{ secrets.OPEN_ID }}         # OPEN_ID → OPENID
-          # 注意这个保持原名
-          CAIYUN_API_TOKEN: ${{ secrets.CAIYUN_API_TOKEN }}
+          # Secrets 名称必须严格匹配你仓库里创建的名字
+          APPID: ${{ secrets.APPID }}
+          APPSECRET: ${{ secrets.APPSECRET }}
+          OPENID: ${{ secrets.OPENID }}
           TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }}
+          CAIYUN_API_TOKEN: ${{ secrets.CAIYUN_API_TOKEN }}
         run: python weather_report.py
