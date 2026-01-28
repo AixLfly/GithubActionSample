@@ -25,16 +25,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests  # 确保requests库已安装
+          pip install requests
 
       - name: Run weather report
         env:
-          # 关键修改1：统一环境变量名（去掉下划线，与Python代码一致）
-          APPID: ${{ secrets.APP_ID }}           # Python读取APPID
-          APPSECRET: ${{ secrets.APP_SECRET }}   # Python读取APPSECRET
-          OPENID: ${{ secrets.OPEN_ID }}         # Python读取OPENID
-          # 关键修改2：添加彩云天气令牌
+          # 关键：这里不重命名，直接使用Python代码期望的变量名
+          # 但你的Secrets中是带下划线的，所以需要对应
+          APPID: ${{ secrets.APP_ID }}           # Secrets中的APP_ID → Python中的APPID
+          APPSECRET: ${{ secrets.APP_SECRET }}   # APP_SECRET → APPSECRET
+          OPENID: ${{ secrets.OPEN_ID }}         # OPEN_ID → OPENID
+          # 注意这个保持原名
           CAIYUN_API_TOKEN: ${{ secrets.CAIYUN_API_TOKEN }}
-          # 模板ID保持不变
           TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }}
         run: python weather_report.py
