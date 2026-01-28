@@ -25,12 +25,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install requests  # 确保requests库已安装
 
       - name: Run weather report
         env:
-          APPID: ${{ secrets.APP_ID }}
-          APPSECRET: ${{ secrets.APP_SECRET }}
-          OPENID: ${{ secrets.OPEN_ID }}
+          # 关键修改1：统一环境变量名（去掉下划线，与Python代码一致）
+          APPID: ${{ secrets.APP_ID }}           # Python读取APPID
+          APPSECRET: ${{ secrets.APP_SECRET }}   # Python读取APPSECRET
+          OPENID: ${{ secrets.OPEN_ID }}         # Python读取OPENID
+          # 关键修改2：添加彩云天气令牌
+          CAIYUN_API_TOKEN: ${{ secrets.CAIYUN_API_TOKEN }}
+          # 模板ID保持不变
           TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }}
         run: python weather_report.py
